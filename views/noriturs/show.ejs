@@ -1,6 +1,7 @@
 <% layout('layouts/boilerplate')%>
 <h1><%= noritur.title %></h1>
-<h2><%= noritur.description %></h2>
+<img src="<%=noritur.image%>" alt="">
+<p><%= noritur.description %><p>
 <p>
     <a href="/noritur/<%=noritur._id%>/edit">게시물 편집</a>
 </p>
