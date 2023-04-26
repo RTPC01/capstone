@@ -1,0 +1,23 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Show</title>
+</head>
+<body>
+    <h1><%= noritur.title %></h1>
+    <h2><%= noritur.description %></h2>
+    <p>
+        <a href="/noritur/<%=noritur._id%>/edit">게시물 편집</a>
+    </p>
+    <p>
+        <form action="/noritur/<%=noritur._id%>?_method=DELETE" method="POST">
+            <button>게시물 삭제</button>
+        </form>
+    </p>
+    <footer>
+        <a href="/noritur">노리터로 돌아가기</a>
+    </footer>
+</body>
+</html>
