@@ -1,22 +1,13 @@
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>노리터 작성</title>
-</head>
-<body>
-    <form action="/noritur" method="POST">
-        <div>
-            <label for="title">제목</label>
-            <input type="text" id="title" name="noritur[title]">
-        </div>
-        <div>
-            <label for="description"></label>
-            <input type="text" id="description" name="noritur[description]">
-        </div>
-        <button>작성</button>
-    </form>
-    <a href="/noritur">노리터로 돌아가기</a>
-</body>
-</html>
+<% layout('layouts/boilerplate')%>
+<form action="/noritur" method="POST">
+    <div>
+        <label for="title">제목</label>
+        <input type="text" id="title" name="noritur[title]">
+    </div>
+    <div>
+        <label for="description"></label>
+        <input type="text" id="description" name="noritur[description]">
+    </div>
+    <button>작성</button>
+</form>
+<a href="/noritur">노리터로 돌아가기</a>

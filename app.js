@@ -1,8 +1,9 @@
 const express = require('express');
 const path = require('path')
 const mongoose = require('mongoose');
-const methodOverride = require('method-override')
-const Noritur = require('./models/noritur')
+const ejsMate = require('ejs-mate');
+const methodOverride = require('method-override');
+const Noritur = require('./models/noritur');
 
 mongoose.connect('mongodb://127.0.0.1:27017/noritur', {
     useNewUrlParser: true,
@@ -17,7 +18,7 @@ db.once("open", () => {
 
 const app = express();
 
-
+app.engine('ejs', ejsMate)
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
 

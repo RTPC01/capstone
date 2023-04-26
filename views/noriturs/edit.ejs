@@ -1,22 +1,14 @@
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>노리터 편집</title>
-</head>
-<body>
-    <form action="/noritur/<%=noritur._id%>?_method=PUT" method="POST">
-        <div>
-            <label for="title">제목</label>
-            <input type="text" id="title" name="noritur[title]" value="<%=noritur.title %>">
-        </div>
-        <div>
-            <label for="description"></label>
-            <input type="text" id="description" name="noritur[description]" value="<%=noritur.description %>">
-        </div>
-        <button>작성</button>
-    </form>
-    <a href="/noritur/<%= noritur._id %>">글로 돌아가기</a>
-</body>
-</html>
+<% layout('layouts/boilerplate')%>
+<h1>게시물 편집</h1>
+<form action="/noritur/<%=noritur._id%>?_method=PUT" method="POST">
+    <div>
+        <label for="title">제목</label>
+        <input type="text" id="title" name="noritur[title]" value="<%=noritur.title %>">
+    </div>
+    <div>
+        <label for="description"></label>
+        <input type="text" id="description" name="noritur[description]" value="<%=noritur.description %>">
+    </div>
+    <button>작성</button>
+</form>
+<a href="/noritur/<%= noritur._id %>">글로 돌아가기</a>
