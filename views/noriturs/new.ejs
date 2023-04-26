@@ -1,13 +1,24 @@
 <% layout('layouts/boilerplate')%>
-<form action="/noritur" method="POST">
-    <div>
-        <label for="title">제목</label>
-        <input type="text" id="title" name="noritur[title]">
+<div class="row">
+    <h1 class="text-center">노리터 작성</h1>
+    <div class="col-6 offset-3">
+        <form action="/noritur" method="POST">
+            <div class="mb-3">
+                <label class="form label" for="title">제목</label>
+                <input class="form-control" type="text" id="title" name="noritur[title]">
+            </div>
+            <div class="mb-3">
+                <label class="form label" for="description"></label>
+                <textarea class="form-control" type="text" id="description" name="noritur[description]"></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form label" for="image">이미지 Url</label>
+                <input class="form-control" type="text" id="image" name="noritur[image]">
+            </div>
+            <div class="mb-3">
+                <button class="btn btn-success">작성</button>
+            </div>
+        </form>
+        <a href="/noritur">노리터로 돌아가기</a>
     </div>
-    <div>
-        <label for="description"></label>
-        <input type="text" id="description" name="noritur[description]">
-    </div>
-    <button>작성</button>
-</form>
-<a href="/noritur">노리터로 돌아가기</a>
+</div>
