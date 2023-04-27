@@ -1,19 +1,28 @@
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>노리터</title>
-</head>
-<body>
-    <h1>동네마당</h1>
-    <div>
-        <a href="/noritur/new">소식공유</a>
-    </div>
-    <ul>
+<% layout('layouts/boilerplate') %>
+<h1>동네마당</h1>
+<div>
+    <a href="/noritur/new">소식공유</a>
+</div>
+<div class="row">
+    <div class="col-6 offset-3">
         <%for (let noritur of noriturs) {%>
-        <li><a href="/noritur/<%= noritur._id %>"><%= noritur.title %></a></li>
+            <div class="card mb-4" style="max-width:540px;">
+                <div class="row">
+                    <div class="col-md-12">
+                        <img class="img-fluid mx-auto d-block" alt="" src="<%=noritur.image%>" class="card-img-top" style="max-width: 100%"; max-height: 200px;>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= noritur.title %></h5>
+                            <p class="card-text"><%= noritur.description %></p>
+                            <p class="card-text">
+                                <small class="text-muted">작성자 작성일 넣기</small>
+                            </p>
+                            <a class="btn btn-primary" href="/noritur/<%=noritur._id%>">보기</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         <% }%>
-    </ul>
-</body>
-</html>
+    </div>
+</div>

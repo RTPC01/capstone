@@ -1,22 +1,25 @@
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>노리터 편집</title>
-</head>
-<body>
-    <form action="/noritur/<%=noritur._id%>?_method=PUT" method="POST">
-        <div>
-            <label for="title">제목</label>
-            <input type="text" id="title" name="noritur[title]" value="<%=noritur.title %>">
-        </div>
-        <div>
-            <label for="description"></label>
-            <input type="text" id="description" name="noritur[description]" value="<%=noritur.description %>">
-        </div>
-        <button>작성</button>
-    </form>
-    <a href="/noritur/<%= noritur._id %>">글로 돌아가기</a>
-</body>
-</html>
+<% layout('layouts/boilerplate')%>
+<div class="row">
+    <h1 class="text-center">노리터 수정하기</h1>
+    <div class="col-6 offset-3">
+        <form action="/noritur/<%=noritur._id%>?_method=PUT" method="POST">
+            <div class="mb-3">
+                <label class="form label" for="title">제목</label>
+                <input class="form-control" type="text" id="title" name="noritur[title]" value="<%=noritur.title %>">
+            </div>
+            <div class="mb-3">
+                <label class="form label" for="description"></label>
+                <textarea class="form-control" type="text" id="description" name="noritur[description]" rows="10"><%=noritur.description%></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form label" for="image">이미지 Url</label>
+                <input class="form-control" type="text" id="image" name="noritur[image]" value="<%=noritur.image %>">
+            </div>
+            <div class="mb-3">
+                <button class="btn btn-info">작성</button>
+            </div>
+        </form>
+        <a href="/noritur/<%= noritur._id %>">글로 돌아가기</a>
+        <a href="/noritur">노리터로 돌아가기</a>
+    </div>
+</div>

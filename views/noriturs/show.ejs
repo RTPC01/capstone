@@ -1,23 +1,29 @@
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Show</title>
-</head>
-<body>
-    <h1><%= noritur.title %></h1>
-    <h2><%= noritur.description %></h2>
-    <p>
-        <a href="/noritur/<%=noritur._id%>/edit">게시물 편집</a>
-    </p>
-    <p>
-        <form action="/noritur/<%=noritur._id%>?_method=DELETE" method="POST">
-            <button>게시물 삭제</button>
-        </form>
-    </p>
-    <footer>
-        <a href="/noritur">노리터로 돌아가기</a>
-    </footer>
-</body>
-</html>
+<% layout('layouts/boilerplate')%>
+
+<div class="row">
+    <div class="col-6 offset-3">
+        <div class="card mb-5">
+            <img src="<%=noritur.image%>" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title"><%=noritur.title%></h5>
+              <p class="card-text"><%=noritur.description%></p>
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item text-muted">작성자</li>
+              <li class="list-group-item text-muted">날짜</li>
+              <li class="list-group-item">첫 번째 댓글?</li>
+            </ul>
+            <div class="card-body">
+                <a class="card-link btn btn-secondary" href="/noritur/<%=noritur._id%>/edit">게시물 편집</a>
+                <form class="d-inline" action="/noritur/<%=noritur._id%>?_method=DELETE" method="POST">
+                    <button class="btn btn-danger">게시물 삭제</button>
+                </form>
+            </div>
+            <div class="card-footer text-muted">
+                <a class="card-link btn btn-info" href="/noritur">전체글 보기</a>
+            </div>
+          </div>
+    </div>
+</div>
+<footer>
+</footer>
