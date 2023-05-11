@@ -25,6 +25,7 @@ router.post('/', validateComment, catchAsync(async(req, res) => {
     noritur.comments.push(comment);
     await comment.save();
     await noritur.save();
+    req.flash('success', '댓글이 등록되었습니다.')
     res.redirect(`/noritur/${noritur._id}`)
 })) //comment
 
@@ -32,6 +33,7 @@ router.delete('/:commentId', catchAsync(async(req, res) => {
     const {id, commentId} = req.params;
     await Noritur.findByIdAndUpdate(id, { $pull: { comments: commentId } });
     await Comment.findByIdAndDelete(commentId);
+    req.flash('success', '댓글이 삭제되었습니다.')
     res.redirect(`/noritur/${id}`);
 }))
 
