@@ -24,7 +24,7 @@ const seedDB = async () => {
         const random1000 = Math.floor(Math.random() * 1000);
         const nori = new Noritur({
             //YOUR USER ID
-            author: '5f5c330c2cd79d538f2c66d9',
+            author: '645d43b3d880f96239801da5',
             title: `${sample(descriptors)} ${sample(places)}`,
             image: 'https://cdn.ggilbo.com/news/photo/202105/848819_677905_2837.jpg',
             description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam dolores vero perferendis laudantium, consequuntur voluptatibus nulla architecto, sit soluta esse iure sed labore ipsam a cum nihil atque molestiae deserunt!'

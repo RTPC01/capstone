@@ -2,23 +2,13 @@ const express = require('express');
 const router = express.Router();
 const catchAsync = require('../../utils/catchAsync');
 const { noriturSchema } = require('../../schemas.js');
-const {isLoggedIn} = require('../../middleware.js');
+const { isLoggedIn, isAuthor, validateNoritur } =require('../../middleware')
 
 const ExpressError = require('../../utils/ExpressError');
 const Noritur = require('../../models/noritur')
 
-
-const validateNoritur = (req, res, next) => {
-    const { error } = noriturSchema.validate(req.body);
-    if( error ){
-        const msg = error.details.map(el => el.message).join(',')
-        throw new ExpressError(msg, 400)
-    } else { //유효성 검사 에러 전달
-        next();
-}};
-
 router.get('/', async (req, res) => {
-    const noriturs = await Noritur.find({});
+    const noriturs = await Noritur.find({}).populate('author');
     res.render('noriturs/index', { noriturs })
 });
 
@@ -29,13 +19,19 @@ router.get('/new', isLoggedIn, (req, res) => {
 router.post('/', isLoggedIn, validateNoritur, catchAsync( async (req, res) => {
     // if(!req.body.noritur) throw new ExpressError('유효하지 않는 데이터입니다.', 400)
     const noritur = new Noritur(req.body.noritur);
+    noritur.author = req.user._id;
     await noritur.save();
     req.flash('success', '게시물이 등록되었습니다.');
     res.redirect(`/noritur/${noritur._id}`)
 })); //for new
 
 router.get('/:id', isLoggedIn, catchAsync(async (req, res) => {
-    const noritur = await Noritur.findById(req.params.id).populate('comments');
+    const noritur = await Noritur.findById(req.params.id).populate({
+        path: 'comments',
+        populate:{
+            path: 'author'
+        }
+    }).populate('author');
     if (!noritur) {
         req.flash('error', '게시물을 찾을 수 없습니다.');
         return res.redirect('/noritur');
@@ -43,8 +39,9 @@ router.get('/:id', isLoggedIn, catchAsync(async (req, res) => {
     res.render('noriturs/show', { noritur })
 }));
 
-router.get('/:id/edit', isLoggedIn, catchAsync(async (req, res) => {
-    const noritur = await Noritur.findById(req.params.id)
+router.get('/:id/edit', isLoggedIn, isAuthor, catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const noritur = await Noritur.findById(id)
     if (!noritur) {
         req.flash('error', '게시물을 찾을 수 없습니다.');
         return res.redirect('/noritur');
@@ -59,7 +56,7 @@ router.put('/:id', isLoggedIn, validateNoritur, catchAsync(async (req, res) => {
     res.redirect(`/noritur/${noritur._id}`)
 })); //for edit
 
-router.delete('/:id', isLoggedIn, catchAsync(async (req, res) => {
+router.delete('/:id', isLoggedIn, isAuthor, catchAsync(async (req, res) => {
     const { id } = req.params;
     await Noritur.findByIdAndDelete(id);
     req.flash('success', '게시물이 삭제되었습니다.')
