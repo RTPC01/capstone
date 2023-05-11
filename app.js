@@ -3,7 +3,7 @@ const path = require('path')
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
 const Joi = require('joi')
-const {noriturSchema, resellSchema} = require('./schemas.js')
+const {noriturSchema, commentSchema, resellSchema} = require('./schemas.js')
 const catchAsync = require('./utils/catchAsync');
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
@@ -35,6 +35,15 @@ const validateNoritur = (req, res, next) => {
     if( error ){
         const msg = error.details.map(el => el.message).join(',')
         throw new ExpressError(result.error.details, 400)
+    } else { //유효성 검사 에러 전달
+        next();
+}}
+
+const validateComment = (req, res, next) => {
+    const {error} = comment.validate(req.body);
+    if( error ){
+        const msg = error.details.map(el => el.message).join(',')
+        throw new ExpressError(msg, 400)
     } else { //유효성 검사 에러 전달
         next();
 }}
@@ -82,7 +91,7 @@ app.delete('/noritur/:id', catchAsync(async (req, res) => {
 }));
 
 
-app.post('/noritur/:id/comments', catchAsync(async(req, res) => {
+app.post('/noritur/:id/comments', validateComment, catchAsync(async(req, res) => {
     const noritur = await Noritur.findById(req.params.id);
     const comment = new Comment(req.body.comment)
     noritur.comments.push(comment);
