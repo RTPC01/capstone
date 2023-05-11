@@ -40,7 +40,7 @@ const validateNoritur = (req, res, next) => {
 }}
 
 const validateComment = (req, res, next) => {
-    const {error} = comment.validate(req.body);
+    const {error} = commentSchema.validate(req.body);
     if( error ){
         const msg = error.details.map(el => el.message).join(',')
         throw new ExpressError(msg, 400)
@@ -87,18 +87,25 @@ app.put('/noritur/:id', validateNoritur, catchAsync(async (req, res) => {
 app.delete('/noritur/:id', catchAsync(async (req, res) => {
     const { id } = req.params;
     await Noritur.findByIdAndDelete(id);
-    res.redirect('/noritur');
+    res.redirect(`/noritur`);
 }));
 
 
 app.post('/noritur/:id/comments', validateComment, catchAsync(async(req, res) => {
     const noritur = await Noritur.findById(req.params.id);
-    const comment = new Comment(req.body.comment)
+    const comment = new Comment(req.body.comment);
     noritur.comments.push(comment);
     await comment.save();
     await noritur.save();
-    res.redirect('/noritur/${noritur._id}')
+    res.redirect(`/noritur/${noritur._id}`)
 })) //comment
+
+app.delete('/noritur/:id/comments/:commentId', catchAsync(async(req, res) => {
+    const {id, commentId} = req.params;
+    await Noritur.findByIdAndUpdate(id, { $pull: { comments: commentId } });
+    await Comment.findByIdAndDelete(commentId);
+    res.redirect(`/noritur/${id}`);
+}))
 
 app.all('*', (req, res, next) => {
     next(new ExpressError('페이지를 찾을 수 없습니다.', 404))
