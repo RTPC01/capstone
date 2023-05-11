@@ -6,6 +6,10 @@ const NoriturSchema = new Schema({
     title: String,
     image: String,
     description: String,
+    author: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
     comments: [
         {
             type: Schema.Types.ObjectId,

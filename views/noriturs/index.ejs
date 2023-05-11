@@ -28,7 +28,7 @@
                             <h5 class="card-title"><%= noritur.title %></h5>
                             <p class="card-text"><%= noritur.description %></p>
                             <p class="card-text">
-                                <small class="text-muted">작성자 작성일 넣기</small>
+                                <small class="text-muted">작성자:<%=noritur.author.username %></small>
                             </p>
                             <a class="btn btn-primary" href="/noritur/<%=noritur._id%>">보기</a>
                         </div>

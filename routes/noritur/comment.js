@@ -1,27 +1,15 @@
 const express = require('express');
 const router = express.Router({ mergeParams: true });
-
+const { validateComment, isLoggedIn, isCommentAuthor } =require('../../middleware')
 const Noritur = require('../../models/noritur')
 const Comment = require('../../models/comment')
-
-
-const { commentSchema } = require('../../schemas.js')
-
 const ExpressError = require('../../utils/ExpressError');
 const catchAsync = require('../../utils/catchAsync');
 
-const validateComment = (req, res, next) => {
-    const {error} = commentSchema.validate(req.body);
-    if( error ){
-        const msg = error.details.map(el => el.message).join(',')
-        throw new ExpressError(msg, 400)
-    } else { //유효성 검사 에러 전달
-        next();
-}}
-
-router.post('/', validateComment, catchAsync(async(req, res) => {
+router.post('/', isLoggedIn, validateComment, catchAsync(async(req, res) => {
     const noritur = await Noritur.findById(req.params.id);
     const comment = new Comment(req.body.comment);
+    comment.author = req.user._id;
     noritur.comments.push(comment);
     await comment.save();
     await noritur.save();
@@ -29,7 +17,7 @@ router.post('/', validateComment, catchAsync(async(req, res) => {
     res.redirect(`/noritur/${noritur._id}`)
 })) //comment
 
-router.delete('/:commentId', catchAsync(async(req, res) => {
+router.delete('/:commentId', isLoggedIn, isCommentAuthor, catchAsync(async(req, res) => {
     const {id, commentId} = req.params;
     await Noritur.findByIdAndUpdate(id, { $pull: { comments: commentId } });
     await Comment.findByIdAndDelete(commentId);

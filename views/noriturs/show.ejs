@@ -9,20 +9,22 @@
               <p class="card-text"><%=noritur.description%></p>
             </div>
             <ul class="list-group list-group-flush">
-              <li class="list-group-item text-muted">작성자</li>
+              <li class="list-group-item text-muted">작성자: <%= noritur.author.username %></li>
               <li class="list-group-item text-muted">날짜</li>
-              <li class="list-group-item">첫 번째 댓글?</li>
             </ul>
+            <% if( currentUser && noritur.author.equals(currentUser._id)) { %>
             <div class="card-body">
                 <a class="card-link btn btn-secondary" href="/noritur/<%=noritur._id%>/edit">게시물 편집</a>
                 <form class="d-inline" action="/noritur/<%=noritur._id%>?_method=DELETE" method="POST">
                     <button class="btn btn-danger">게시물 삭제</button>
                 </form>
             </div>
+            <% } %>
             <div class="card-footer text-muted">
                 <a class="card-link btn btn-info" href="/noritur">전체글 보기</a>
             </div>
           </div>
+          <% if(currentUser) { %>
           <form action="/noritur/<%=noritur._id%>/comments" method="POST" class="mb-3 validated-form" novalidate>
             <div class="mb-3">
               <label class="form-label" for="body">Comments</label>
@@ -32,13 +34,17 @@
             </div>
             <button class="btn btn-success">작성</button>
           </form>
+          <% } %>
           <% for(let comment of noritur.comments) { %>
           <div class="card mb-3">
             <div class="card-body">
-              <p ckass="card-text"><%= comment.body %></p>
+              <h5 class="card-subtitle mb-2 text-muted"><%= comment.author.username%></h6>
+              <p class="card-text"><%= comment.body %></p>
+              <%  if( currentUser && comment.author.equals(currentUser._id))  {%>
               <form action="/noritur/<%=noritur._id%>/comments/<%=comment._id%>?_method=DELETE" method="POST">
                 <button class="btn btn-sm btn-danger">삭제</button>
               </form>
+              <% } %>
             </div>
           </div>
           <% } %>
