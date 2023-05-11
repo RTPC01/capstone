@@ -74,7 +74,7 @@ app.get('/noritur/:id/edit', async (req, res) => {
 })
 
 app.get('/noritur/:id', catchAsync(async (req, res) => {
-    const noritur = await Noritur.findById(req.params.id)
+    const noritur = await Noritur.findById(req.params.id).populate('comments');
     res.render('noriturs/show', { noritur })
 }))
 
