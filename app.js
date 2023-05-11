@@ -2,20 +2,16 @@ const express = require('express');
 const path = require('path')
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
-const Joi = require('joi')
-const {noriturSchema, commentSchema, resellSchema} = require('./schemas.js')
-const catchAsync = require('./utils/catchAsync');
+const session = require('express-session')
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
-const Noritur = require('./models/noritur');
-const Comment = require('./models/comment')
 
 const noritur = require('./routes/noritur/noritur.js');
 const comments = require('./routes/noritur/comment')
 
 mongoose.connect('mongodb://127.0.0.1:27017/noritur', {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
 });
 
 const db = mongoose.connection;
@@ -32,6 +28,19 @@ app.set('views', path.join(__dirname, 'views'))
 
 app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride('_method'));
+app.use(express.static(path.join(__dirname, 'public')))
+
+const sessionConfig = {
+    secret: 'thisshouldbettersecret!',
+    resave: false,
+    saveUnitialized: true,
+    cookie: {
+        httpOnly: true,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+    }
+}
+app.use(session(sessionConfig))
 
 app.use('/noritur', noritur)
 app.use('/noritur/:id/comments', comments)
