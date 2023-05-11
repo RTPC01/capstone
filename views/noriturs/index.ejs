@@ -1,10 +1,22 @@
 <% layout('layouts/boilerplate') %>
 <h1>동네마당</h1>
-<div>
-    <a href="/noritur/new">소식공유</a>
-</div>
 <div class="row">
-    <div class="col-6 offset-3">
+    <div class="col-12 col-sm-3 col-xl-2 px-sm-2 px-0 bg-dark d-flex h-100 overflow-auto">
+        <div class="list-group">
+            <a href="#" class="list-group-item list-group-item-action">항목 1</a>
+            <a href="#" class="list-group-item list-group-item-action">항목 2</a>
+            <a href="#" class="list-group-item list-group-item-action">항목 3</a>
+            <a href="#" class="list-group-item list-group-item-action">항목 3</a>
+            <a href="#" class="list-group-item list-group-item-action">항목 3</a>
+            <a href="#" class="list-group-item list-group-item-action">항목 3</a>
+            <a href="#" class="list-group-item list-group-item-action">항목 3</a>
+            <a href="#" class="list-group-item list-group-item-action">항목 3</a>
+            <a href="#" class="list-group-item list-group-item-action">항목 3</a>
+            <a href="#" class="list-group-item list-group-item-action">항목 3</a>
+            <a href="#" class="list-group-item list-group-item-action">항목 3</a>
+        </div>
+    </div>
+    <div class="col-6">
         <%for (let noritur of noriturs) {%>
             <div class="card mb-4" style="max-width:540px;">
                 <div class="row">
@@ -25,4 +37,14 @@
             </div>
         <% }%>
     </div>
+    <div class="col-3">
+        <div class="list-group">
+            <a href="#" class="list-group-item list-group-item-action">항목 1</a>
+            <a href="#" class="list-group-item list-group-item-action">항목 2</a>
+            <a href="#" class="list-group-item list-group-item-action">항목 3</a>
+        </div>
+    </div>
+</div>
+<div>
+    <a href="/noritur/new" class="btn btn-primary floating-button">소식공유</a>
 </div>

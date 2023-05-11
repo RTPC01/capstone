@@ -2,6 +2,9 @@ const express = require('express');
 const path = require('path')
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
+const Joi = require('joi')
+const catchAsync = require('./utils/catchAsync');
+const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
 const Noritur = require('./models/noritur');
 
@@ -25,6 +28,21 @@ app.set('views', path.join(__dirname, 'views'))
 app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride('_method'));
 
+const validateNoritur = (req, res, next) => {
+    const noriturSchema = Joi.object({
+        noritur: Joi.object({
+            title: Joi.string().required(),
+            description: Joi.string().required(),
+        }).required() 
+    }) //유효성 검사
+    const { error } = noriturSchema.validate(req.body);
+    if( error ){
+        const msg = error.details.map(el => el.message).join(',')
+        throw new ExpressError(result.error.details, 400)
+    } else { //유효성 검사 에러 전달
+        next();
+}}
+
 app.get('/', (req, res) => {
     res.render('home')
 })
@@ -38,32 +56,43 @@ app.get('/noritur/new', (req, res) => {
     res.render('noriturs/new');
 })
 
-app.post('/noritur', async (req, res) => {
+app.post('/noritur', validateNoritur, catchAsync( async (req, res) => {
+    // if(!req.body.noritur) throw new ExpressError('유효하지 않는 데이터입니다.', 400)
     const noritur = new Noritur(req.body.noritur);
     await noritur.save();
     res.redirect(`/noritur/${noritur._id}`)
-}) //for new
+})) //for new
 
 app.get('/noritur/:id/edit', async (req, res) => {
     const noritur = await Noritur.findById(req.params.id)
     res.render('noriturs/edit', { noritur });
 })
 
-app.get('/noritur/:id', async (req, res) => {
+app.get('/noritur/:id', catchAsync(async (req, res) => {
     const noritur = await Noritur.findById(req.params.id)
     res.render('noriturs/show', { noritur })
-})
+}))
 
-app.put('/noritur/:id', async (req, res) => {
+app.put('/noritur/:id', catchAsync(async (req, res) => {
     const { id } = req.params;
     const noritur = await Noritur.findByIdAndUpdate(id, { ...req.body.noritur });
     res.redirect(`/noritur/${noritur._id}`)
-}); //for edit
+})); //for edit
 
-app.delete('/noritur/:id', async (req, res) => {
+app.delete('/noritur/:id', catchAsync(async (req, res) => {
     const { id } = req.params;
     await Noritur.findByIdAndDelete(id);
     res.redirect('/noritur');
+}));
+
+app.all('*', (req, res, next) => {
+    next(new ExpressError('페이지를 찾을 수 없습니다.', 404))
+})
+
+app.use((err, req, res, next) => {
+    const{ statusCode = 500 } = err;
+    if(!err.message) err.message = '잘못되었습니다.'
+    res.status(statusCode).render('error', { err });//에러 발생.. error.ejs랜더링
 })
 
 app.listen(3000, () => {
