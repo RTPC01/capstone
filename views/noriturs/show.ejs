@@ -23,6 +23,25 @@
                 <a class="card-link btn btn-info" href="/noritur">전체글 보기</a>
             </div>
           </div>
+          <form action="/noritur/<%=noritur._id%>/comments" method="POST" class="mb-3 validated-form" novalidate>
+            <div class="mb-3">
+              <label class="form-label" for="body">Comments</label>
+              <textarea class="form-control" name="comment[body]" id="body" cols="30" rows="3" required></textarea>
+              <div class="valid-feedback">
+              </div>
+            </div>
+            <button class="btn btn-success">작성</button>
+          </form>
+          <% for(let comment of noritur.comments) { %>
+          <div class="card mb-3">
+            <div class="card-body">
+              <p ckass="card-text"><%= comment.body %></p>
+              <form action="/noritur/<%=noritur._id%>/comments/<%=comment._id%>?_method=DELETE" method="POST">
+                <button class="btn btn-sm btn-danger">삭제</button>
+              </form>
+            </div>
+          </div>
+          <% } %>
     </div>
 </div>
 <footer>
