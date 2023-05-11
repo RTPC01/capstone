@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const catchAsync = require('../utils/catchAsync');
-const { noriturSchema } = require('../schemas.js')
+const catchAsync = require('../../utils/catchAsync');
+const { noriturSchema } = require('../../schemas.js')
 
-const ExpressError = require('../utils/ExpressError');
-const Noritur = require('../models/noritur')
+const ExpressError = require('../../utils/ExpressError');
+const Noritur = require('../../models/noritur')
 
 
 const validateNoritur = (req, res, next) => {

@@ -10,8 +10,8 @@ const methodOverride = require('method-override');
 const Noritur = require('./models/noritur');
 const Comment = require('./models/comment')
 
-const noritur = require('./routes/noritur');
-const comments = require('./routes/comment')
+const noritur = require('./routes/noritur/noritur.js');
+const comments = require('./routes/noritur/comment')
 
 mongoose.connect('mongodb://127.0.0.1:27017/noritur', {
     useNewUrlParser: true,
