@@ -3,10 +3,12 @@ const path = require('path')
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
 const Joi = require('joi')
+const {noriturSchema, resellSchema} = require('./schemas.js')
 const catchAsync = require('./utils/catchAsync');
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
 const Noritur = require('./models/noritur');
+const Comment = require('./models/comment')
 
 mongoose.connect('mongodb://127.0.0.1:27017/noritur', {
     useNewUrlParser: true,
@@ -29,12 +31,6 @@ app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride('_method'));
 
 const validateNoritur = (req, res, next) => {
-    const noriturSchema = Joi.object({
-        noritur: Joi.object({
-            title: Joi.string().required(),
-            description: Joi.string().required(),
-        }).required() 
-    }) //유효성 검사
     const { error } = noriturSchema.validate(req.body);
     if( error ){
         const msg = error.details.map(el => el.message).join(',')
@@ -73,7 +69,7 @@ app.get('/noritur/:id', catchAsync(async (req, res) => {
     res.render('noriturs/show', { noritur })
 }))
 
-app.put('/noritur/:id', catchAsync(async (req, res) => {
+app.put('/noritur/:id', validateNoritur, catchAsync(async (req, res) => {
     const { id } = req.params;
     const noritur = await Noritur.findByIdAndUpdate(id, { ...req.body.noritur });
     res.redirect(`/noritur/${noritur._id}`)
@@ -84,6 +80,16 @@ app.delete('/noritur/:id', catchAsync(async (req, res) => {
     await Noritur.findByIdAndDelete(id);
     res.redirect('/noritur');
 }));
+
+
+app.post('/noritur/:id/comments', catchAsync(async(req, res) => {
+    const noritur = await Noritur.findById(req.params.id);
+    const comment = new Comment(req.body.comment)
+    noritur.comments.push(comment);
+    await comment.save();
+    await noritur.save();
+    res.redirect('/noritur/${noritur._id}')
+})) //comment
 
 app.all('*', (req, res, next) => {
     next(new ExpressError('페이지를 찾을 수 없습니다.', 404))

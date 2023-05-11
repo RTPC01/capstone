@@ -23,11 +23,12 @@
                 <a class="card-link btn btn-info" href="/noritur">전체글 보기</a>
             </div>
           </div>
-          <form action="">
+          <form action="/noritur/<%=noritur._id%>/comments" method="POST" class="mb-3">
             <div class="mb-3">
-              <label for="body">Comments</label>
-              <textarea class="form-control" name="review[body]" id="body" cols="6" rows="10"></textarea>
+              <label class="form-label" for="body">Comments</label>
+              <textarea class="form-control" name="review[body]" id="body" cols="30" rows="3"></textarea>
             </div>
+            <button class="btn btn-success">작성</button>
           </form>
     </div>
 </div>
