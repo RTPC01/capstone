@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const catchAsync = require('../../utils/catchAsync');
-const { noriturSchema } = require('../../schemas.js')
+const { noriturSchema } = require('../../schemas.js');
+const {isLoggedIn} = require('../../middleware.js');
 
 const ExpressError = require('../../utils/ExpressError');
 const Noritur = require('../../models/noritur')
@@ -21,11 +22,11 @@ router.get('/', async (req, res) => {
     res.render('noriturs/index', { noriturs })
 });
 
-router.get('/new', (req, res) => {
+router.get('/new', isLoggedIn, (req, res) => {
     res.render('noriturs/new');
 });
 
-router.post('/', validateNoritur, catchAsync( async (req, res) => {
+router.post('/', isLoggedIn, validateNoritur, catchAsync( async (req, res) => {
     // if(!req.body.noritur) throw new ExpressError('유효하지 않는 데이터입니다.', 400)
     const noritur = new Noritur(req.body.noritur);
     await noritur.save();
@@ -33,7 +34,7 @@ router.post('/', validateNoritur, catchAsync( async (req, res) => {
     res.redirect(`/noritur/${noritur._id}`)
 })); //for new
 
-router.get('/:id', catchAsync(async (req, res) => {
+router.get('/:id', isLoggedIn, catchAsync(async (req, res) => {
     const noritur = await Noritur.findById(req.params.id).populate('comments');
     if (!noritur) {
         req.flash('error', '게시물을 찾을 수 없습니다.');
@@ -42,7 +43,7 @@ router.get('/:id', catchAsync(async (req, res) => {
     res.render('noriturs/show', { noritur })
 }));
 
-router.get('/:id/edit', catchAsync(async (req, res) => {
+router.get('/:id/edit', isLoggedIn, catchAsync(async (req, res) => {
     const noritur = await Noritur.findById(req.params.id)
     if (!noritur) {
         req.flash('error', '게시물을 찾을 수 없습니다.');
@@ -51,14 +52,14 @@ router.get('/:id/edit', catchAsync(async (req, res) => {
     res.render('noriturs/edit', { noritur });
 }));
 
-router.put('/:id', validateNoritur, catchAsync(async (req, res) => {
+router.put('/:id', isLoggedIn, validateNoritur, catchAsync(async (req, res) => {
     const { id } = req.params;
     const noritur = await Noritur.findByIdAndUpdate(id, { ...req.body.noritur });
     req.flash('success', '게시물이 수정되었습니다.')
     res.redirect(`/noritur/${noritur._id}`)
 })); //for edit
 
-router.delete('/:id', catchAsync(async (req, res) => {
+router.delete('/:id', isLoggedIn, catchAsync(async (req, res) => {
     const { id } = req.params;
     await Noritur.findByIdAndDelete(id);
     req.flash('success', '게시물이 삭제되었습니다.')

@@ -15,7 +15,7 @@ router.post('/register', catchAsync(async (req, res, next) => {
         const registeredUser = await User.register(user, password);
         req.login(registeredUser, err => {
             if (err) return next(err);
-            req.flash('success', '환영합니다!');
+            req.flash('success', '환영합니다! 동네 친구들과 재미있게 놀아보세요!');
             res.redirect('/noritur');
         })
     } catch (e) {
@@ -36,9 +36,11 @@ router.post('/login', passport.authenticate('local', { failureFlash: true, failu
 })
 
 router.get('/logout', (req, res) => {
-    req.logout();
-    req.flash('success', "안녕히가세요!");
-    res.redirect('/noritur');
+    req.logout(function(err){
+        if (err) {return next(err); }
+        req.flash('success', "안녕히가세요!");
+        res.redirect('/noritur');
+    });
 })
 
 module.exports = router;

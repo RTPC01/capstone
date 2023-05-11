@@ -33,5 +33,14 @@
           <button class="btn btn-outline-success" type="submit" style="font-size: 0.8rem; padding: 2px 6px; background-color:aliceblue">검색</button>
         </form>
       </div>
+      <div class="navbar-nav ml-auto">
+        <% if(!currentUser) {%>
+        <a class="nav-link" href="/login">로그인</a>
+        <a class="nav-link" href="/register">회원가입</a>
+        <% } else {%>
+        <a class="nav-link" href="/logout">로그아웃</a>
+    </div>
+    <% } %>
+</div>
     </div>
   </nav>
