@@ -34,6 +34,10 @@ module.exports.isAuthor = async (req, res, next) => {
 module.exports.isCommentAuthor = async (req, res, next) => {
     const { id, commentId } = req.params;
     const comment = await Comment.findById(commentId);
+    if (!comment) {
+        req.flash('error', '댓글이 존재하지 않습니다!');
+        return res.redirect(`/noritur/${id}`);
+    }
     if (!comment.author.equals(req.user._id)) {
         req.flash('error', '허가되지 않는 접근입니다!');
         return res.redirect(`/noritur/${id}`);
